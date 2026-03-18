@@ -8,10 +8,10 @@
 
 
 template <typename K,typename V>
-class LRUcache
+class LRUCache
 {
 public:
-    explicit LRUcache(size_t capacity) : cap_(capacity)
+    explicit LRUCache(size_t capacity) : cap_(capacity)
     {
         if (cap_==0)
         {
@@ -19,7 +19,23 @@ public:
         }
         
     }
+    bool get(const K& key ,V& out)
+    {
+        auto it=index_.find(key);
+        if(it==index_.end())
+        {
+            return false;
+        }
+        items_.splice(items_.begin(),items_,it->second);
+        out=it->second->second;
+        return true;
+    }
 private:
     size_t cap_;
-    std::list<std::pair<K,V>>items;
-}
+    std::list<std::pair<K,V>>items_;
+    std::unordered_map<K,typename std::list<std::pair<K,V>>::iterator>index_;
+    
+};
+
+
+
