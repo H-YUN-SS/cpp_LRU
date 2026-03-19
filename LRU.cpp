@@ -85,7 +85,7 @@ public:
         }
         cap_=newcap;
 
-        while(items_>cap_)
+        while(items_.size()>cap_)
         {
             auto &old_item=items_.back();
             index_.erase(old_item.first);
@@ -100,7 +100,7 @@ public:
         {
             std::cout<<"("<<it->first<<":"<<it->second<<")";
         }
-        std::cout<<"\n";
+        std::cout<<"\n"<<'\n';
     }
 
 
@@ -116,11 +116,52 @@ private:
 int main()
 {
     LRUCache<int,std::string>cache(3);
-    std::cout<<"===插入三个元素==="<<std::endl;
+    std::cout<<" ===插入三个元素=== "<<std::endl;
     cache.put(1,"A");
     cache.put(2,"B");
     cache.put(3,"C");
     cache.debug_print();
-
     
+    std::cout<<"\n ===获取key=2 === "<<std::endl;
+    std::string out;
+    if(cache.get(2,out))
+    {
+        std::cout<<"get 2 -> "<<out << std::endl;
+        cache.debug_print();
+    }
+
+    std::cout<<"=== 插入key=4 (触发淘汰) ==="<<std::endl;
+    cache.put(4,"D");
+    cache.debug_print();
+
+    std::cout<<"=== 更新key=2 ==="<<std::endl;
+    cache.put(2,"B2");
+    cache.debug_print();
+
+    std::cout<<"=== 删除key=3 ==="<<std::endl;
+    cache.erase(3);
+    cache.debug_print();
+
+    std::cout<<"=== 调整容量从3到2 ==="<<std::endl;
+    std::cout<<"当前大小: "<<cache.size()<<",容量： "<<cache.capacity()<<std::endl;
+    cache.debug_print();
+    cache.resize(2);
+    std::cout<<"调整后大小: "<<cache.size()<<",容量： "<<cache.capacity()<<std::endl;
+    cache.debug_print();
+
+    std::cout<<"=== 调整容量从2到5 ==="<<std::endl;
+    std::cout<<"当前大小: "<<cache.size()<<",容量： "<<cache.capacity()<<std::endl;
+    cache.debug_print();
+    cache.resize(5);
+    std::cout<<"调整后大小: "<<cache.size()<<",容量： "<<cache.capacity()<<std::endl;
+    cache.put(5, "E");
+    cache.put(6, "F");
+    cache.debug_print();
+    
+
+    std::cout << "\n=== 清空缓存 ===" << std::endl;
+    cache.clear();
+    std::cout << "清空后大小: " << cache.size() << std::endl;
+    cache.debug_print();  
+    return 0;
 }
